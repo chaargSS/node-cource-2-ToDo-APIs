@@ -7,7 +7,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,db)=>{
              console.log('connected to mongodb');
     
    //find() return the cursor
-    db.collection('Users').find({ Name:'john'}).count().then((count)=>{
+    db.collection('Users').find({ Name:'john'}).then((count)=>{
              console.log('ToDos count',count);  //ToDos count 2
     },(err)=>{
         console.log('unable to fetch',err);
