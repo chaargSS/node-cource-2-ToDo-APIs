@@ -30,6 +30,23 @@ app.get('/todos',(req,res)=>{
     });
 });
 
+const {ObjectID} = require('mongodb');
+//GET /todos:ID
+app.get('/todos/:id',(req,res)=> {
+     var id = req.params.id;
+    if(!ObjectID.isValid(id)){
+        return  res.status(404).send();
+    }
+    Todo.findById(id).then((doc)=>{
+        if(!doc){
+            return  res.status(400).send();
+        }
+        res.send(doc);
+    },(e)=>{
+         res.status(400).send();
+    });
+});
+
 app.listen(3000,(res)=>{
     console.log('listening to port 3000');
 });
