@@ -35,7 +35,6 @@ app.get('/todos',(req,res)=>{
     });
 });
 
-
 //GET /todos:ID
 app.get('/todos/:id',(req,res)=> {
      var id = req.params.id;
@@ -77,7 +76,9 @@ app.patch('/todos/:id',(req,res)=> {
     }
     //checking if completed is true or not ,if true then set value of completedAt to time stamp
     if(_.isBoolean(body.completed) && body.completed){
-        body.completedAt = new Date().getTime;
+        
+        body.completedAt = new Date().getTime();
+        
     }else {
         body.completedAt = null;
         body.completed = false;
@@ -90,6 +91,7 @@ app.patch('/todos/:id',(req,res)=> {
 
         res.send({todo});
     }).catch((e)=>{
+        console.log(e);
         res.status(400).send();
     });
 });
