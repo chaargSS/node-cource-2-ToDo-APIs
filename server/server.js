@@ -49,6 +49,21 @@ app.get('/todos/:id',(req,res)=> {
     });
 });
 
+app.delete('/todos/:id',(req,res)=> {
+     var id = req.params.id;
+    if(!ObjectID.isValid(id)){
+        return  res.status(404).send();  //id= 123 will get empty with 404 status code
+    }
+    Todo.findByIdAndRemove(id).then((doc)=>{
+        if(!doc){      //we need this even if no doc is present findByIdAndRemove() still runs successful with null return
+            return  res.status(404).send();   
+        }
+        res.send(doc);
+    },(e)=>{
+         res.status(400).send(); //will get bad request /400 error
+    });
+});
+
 app.listen(port,(res)=>{
     console.log(`starting at : ${port}`);
 });
