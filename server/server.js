@@ -35,15 +35,15 @@ const {ObjectID} = require('mongodb');
 app.get('/todos/:id',(req,res)=> {
      var id = req.params.id;
     if(!ObjectID.isValid(id)){
-        return  res.status(404).send();
+        return  res.status(404).send();  //id= 123 will get empty with 404 status code
     }
     Todo.findById(id).then((doc)=>{
         if(!doc){
-            return  res.status(400).send();
+            return  res.status(404).send();  
         }
         res.send(doc);
     },(e)=>{
-         res.status(400).send();
+         res.status(400).send(); //will get bad request /400 error
     });
 });
 
