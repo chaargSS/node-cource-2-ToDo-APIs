@@ -58,7 +58,7 @@ app.delete('/todos/:id',(req,res)=> {
         if(!doc){      //we need this even if no doc is present findByIdAndRemove() still runs successful with null return
             return  res.status(404).send();   
         }
-        res.send(doc);
+        res.send({doc});
     },(e)=>{
          res.status(400).send(); //will get bad request /400 error
     });
