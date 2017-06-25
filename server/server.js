@@ -5,6 +5,8 @@ var {mongoose}= require('./db/mongoose.js');  //.. since both server.js and mong
 var {Todo} = require('./models/Todo');
 var {user} = require('./models/Users.js');
 
+
+const port = process.env.PORT || 3000;
 var app = express();
 
 app.use(bodyParser.json());
@@ -47,8 +49,8 @@ app.get('/todos/:id',(req,res)=> {
     });
 });
 
-app.listen(3000,(res)=>{
-    console.log('listening to port 3000');
+app.listen(port,(res)=>{
+    console.log(`starting at : ${port}`);
 });
 
 module.exports = {app};
