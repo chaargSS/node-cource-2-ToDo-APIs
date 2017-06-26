@@ -2,7 +2,7 @@ const expect =require('expect');
 const request = require('supertest');
 const {ObjectID}=require('mongodb');
 
-const {apps}= require('./../server');
+const {app}= require('./../server.js'); //. for  relative path i.e under test folder  .. for going back one directory in server
 const {Todo}= require('./../models/todo');
 
 
