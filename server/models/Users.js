@@ -56,6 +56,25 @@ userSchema.methods.generateAuthToken = function() {
      });
 };
 
+
+//userSchema.statics is an object kind method, any method created on it turnsout to be a model method unlike userSchema.methods at which we created instance methods 
+userSchema.statics.findByToken = function(token){
+    var User = this ; //binding model as this
+    var decoded;
+
+    try{
+      decoded = jwt.verify(token,'abc123');
+    }catch (e){
+       return Promise.reject();//equivalent to new Promise((resolve,reject)=>{ reject();}) //we can even pass argument to return in reject(arg)
+    }
+
+    return User.findOne({
+        _id:decoded._id,
+        'tokens.token':token, //  ''  is used bcoz of nested access to token
+        'tokens.access':'auth'
+    });
+};
+
 var User = mongoose.model('User',userSchema);
 
 module.exports = {User};
