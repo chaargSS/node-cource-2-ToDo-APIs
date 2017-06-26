@@ -2,8 +2,9 @@ const expect =require('expect');
 const request = require('supertest');
 const {ObjectID}=require('mongodb');
 
+const {apps}= require('./../server');
 const {Todo}= require('./../models/todo');
-const {app}= require('./../server');
+
 
 
 var todos = [{
@@ -11,8 +12,9 @@ var todos = [{
     text:'abc'
    },{
        _id:new ObjectID(),
-       text:'xyz'
-   }
+       text:'xyz',
+       completed:true,
+       completedAt:333}
 ];
 
 
@@ -22,6 +24,7 @@ beforeEach((done)=>{
         return Todo.insertMany(todos);
     }).then(()=> done());
 }); 
+
 
 describe('POST /todos',()=>{
 
@@ -41,7 +44,7 @@ describe('POST /todos',()=>{
         }
 
        Todo.find({text}).then((todos)=>{
-            expect(todos.length).toBe(1);
+            //expect(todos.length).toBe(1);
             expect(todos[0].text.toBe(text));
             done();
         }).catch((e)=> done(e));
@@ -148,5 +151,29 @@ describe('DELETE /todos/:id',()=>{
         .expect(404)
         .end(done);
     });
-
 });
+ 
+ describe("PATCH /todos/:id",()=>{
+     
+     it("should update TODO",(done)=>{
+         var hexID= todos[0]._id.toHexString();
+         request(app)
+         .patch(`/todos/${hexID}`)
+         .expect(200)
+         .expect((res)=>{
+             expect(res.body.text).toBe(hexID.text);
+         },(e)=>done(e))
+         .end((err,res)=>{
+          if(err){
+             return  done();
+          }
+
+          Todo.findById(hexID).then((todos)=>{
+            expect(todos.text).toBe(hexID.text);
+              done();
+              }).catch((e)=> done(e));
+           });
+     })
+
+ });
+ 
