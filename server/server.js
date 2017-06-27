@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const _ = require('lodash');
 const {ObjectID} = require('mongodb');
 
-var {mongoose}= require('./db/mongoose.js');  //.. since both server.js and mongoose.js in other folders than root
+var {mongoose}= require('./db/mongoose.js');  
 var {Todo} = require('./models/Todo');
 var {User} = require('./models/Users.js');
 var {authenticate} = require('./middleware/authenticate');
