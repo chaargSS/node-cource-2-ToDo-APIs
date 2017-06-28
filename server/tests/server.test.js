@@ -19,6 +19,7 @@ describe('POST /todos',()=>{
 
         request(app)
         .post('/todos')
+        .set('x-auth',users[0].tokens[0].token) 
          .send({text})
          .expect(200)
          .expect((res)=>{
@@ -42,6 +43,7 @@ describe('POST /todos',()=>{
 
         request(app)
         .post('/todos')
+        .set('x-auth',users[0].tokens[0].token) 
          .send({})
          .expect(400)
          .end((err,res)=>{
@@ -64,9 +66,10 @@ describe('GET /todos',()=>{
     it('should get all Todo data',(done)=>{
         request(app)
         .get('/todos')
+        .set('x-auth',users[0].tokens[0].token) 
         .expect(200)
         .expect((res)=>{
-            expect(res.body.length).toBe(2);
+            expect(res.body.length).toBe(1);
         })
         .end(done);
     });
@@ -77,6 +80,7 @@ describe('GET /todos/:id',()=>{
     it('should get individual ID Todo data',(done)=>{
         request(app)
         .get(`/todos/${todos[0]._id.toHexString()}`)
+        .set('x-auth',users[0].tokens[0].token) 
         .expect(200)
         .expect((res)=>{
             expect(res.body.text).toBe(todos[0].text);
@@ -88,6 +92,7 @@ describe('GET /todos/:id',()=>{
          var id=new ObjectID();
         request(app)
         .get(`/todos/${id.toHexString()}`)
+        .set('x-auth',users[0].tokens[0].token) 
         .expect(404)
         .end(done);
     });
@@ -95,6 +100,7 @@ describe('GET /todos/:id',()=>{
      it('should get 404 for non object',(done)=>{
         request(app)
         .get('/todos/123abc')
+        .set('x-auth',users[0].tokens[0].token) 
         .expect(404)
         .end(done);
     });
