@@ -41,12 +41,16 @@ app.get('/todos',authenticate,(req,res)=>{
 });
 
 //GET /todos:ID
-app.get('/todos/:id',(req,res)=> {
+app.get('/todos/:id',authenticate,(req,res)=> {
      var id = req.params.id;
     if(!ObjectID.isValid(id)){
         return  res.status(404).send();  //id= 123 will get empty with 404 status code
     }
-    Todo.findById(id).then((doc)=>{
+    Todo.findOne({
+        _id:id,
+        _creator:req.user._id
+   })
+.then((doc)=>{
         if(!doc){
             return  res.status(404).send();  
         }
@@ -56,12 +60,15 @@ app.get('/todos/:id',(req,res)=> {
     });
 });
 
-app.delete('/todos/:id',(req,res)=> {
+app.delete('/todos/:id',authenticate,(req,res)=> {
      var id = req.params.id;
     if(!ObjectID.isValid(id)){
         return  res.status(404).send();  //id= 123 will get empty with 404 status code
     }
-    Todo.findByIdAndRemove(id).then((doc)=>{
+    Todo.findOneAndRemove({
+        _id:id,
+        _creator:req.user._id
+   }).then((doc)=>{
         if(!doc){      //we need this even if no doc is present findByIdAndRemove() still runs successful with null return
             return  res.status(404).send();   
         }
@@ -71,7 +78,7 @@ app.delete('/todos/:id',(req,res)=> {
     });
 });
 
-app.patch('/todos/:id',(req,res)=> {
+app.patch('/todos/:id',authenticate,(req,res)=> {
     var id = req.params.id;
     //describing the properties which can be updated
     var body= _.pick(req.body,['text','completed']);
@@ -89,7 +96,10 @@ app.patch('/todos/:id',(req,res)=> {
         body.completed = false;
     };
 
-    Todo.findByIdAndUpdate(id,{$set:body},{new:true}).then((todo)=>{
+    Todo.findOneAndUpdate({
+        _id:id,
+        _creator:req.user._id
+   },{$set:body},{new:true}).then((todo)=>{
         if(!todo){
            return res.status(404).send();
         }
